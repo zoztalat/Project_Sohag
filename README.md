@@ -214,6 +214,91 @@ myAPP/
 
 ---
 
+## 📖 How to Install & Run Skinova
+
+> Follow these steps in order. You'll need two terminal windows open at the same time.
+
+---
+
+### 🔽 Step 1 — Download the Project
+
+```bash
+git clone https://github.com/<your-username>/skinova.git
+cd skinova
+```
+
+---
+
+### ⚙️ Step 2 — Install Frontend Dependencies
+
+```bash
+npm install
+```
+
+---
+
+### 🔐 Step 3 — Set Up Your Environment Variables
+
+Create a `.env` file in the project root and fill in your Supabase and Firebase credentials:
+
+```env
+VITE_SUPABASE_URL=https://your-project-ref.supabase.co
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
+
+---
+
+### 🤖 Step 4 — Set Up the AI Backend
+
+Open a **second terminal** and run:
+
+```bash
+# Create virtual environment
+python -m venv venv
+
+# Activate it (Windows)
+venv\Scripts\activate
+
+# Activate it (macOS / Linux)
+source venv/bin/activate
+
+# Install dependencies
+pip install fastapi uvicorn torch torchvision pillow numpy python-multipart
+
+# Start the AI server
+python -m uvicorn api_server:app --host 0.0.0.0 --port 8000 --reload
+```
+
+---
+
+### 🚀 Step 5 — Launch the App
+
+Back in your **first terminal**, run:
+
+```bash
+npm run dev
+```
+
+---
+
+### ✅ You're All Set!
+
+| Service | URL |
+|---|---|
+| 🌐 Frontend (App) | http://localhost:5173 |
+| 🤖 AI Backend | http://localhost:8000 |
+
+> Both must be running at the same time for the full app to work.
+
+---
+
 ## ▶️ Full Run Guide (Step by Step)
 
 ### Terminal 1 — Frontend
