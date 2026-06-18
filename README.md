@@ -45,7 +45,7 @@ Skinova is a full-stack AI dermatology web app that lets patients upload a photo
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/zoztalat/skinova.git
+git clone https://github.com/<your-username>/skinova.git
 cd skinova
 ```
 
