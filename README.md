@@ -1,59 +1,289 @@
+# 🩺 Skinova — AI-Powered Dermatology Assistant
 
-  # Skinova AI Dermatology App
-
-  
-  ## Running the code
-
-  Run `npm i` to install the dependencies.
-
-  Run `npm run dev` to start the development server.
-  
-# 🧴 Skinova — AI-Powered Dermatology Assistant
-
-Skinova is an intelligent clinical companion that assists dermatologists in diagnosing skin conditions, monitoring patient progress, and guiding full recovery journeys — from first consultation to complete healing.
-
-> **Skinova is a doctor's assistant, not a replacement** — designed to enhance clinical accuracy and patient care from diagnosis to full recovery.
+Skinova is a full-stack AI dermatology web app that lets patients upload a photo of a skin condition, get an AI-assisted diagnosis with a confidence score, check drug interactions, track medical history, find nearby clinics, watch awareness videos, and chat with an in-app assistant — all backed by Supabase and Firebase.
 
 ---
 
 ## ✨ Features
 
-### 1. 🔬 AI Skin Diagnosis
-Detect and classify skin conditions from images with high accuracy using advanced computer vision models.
-
-### 2. 📈 Progress Tracking
-Monitor patient recovery visually over time with side-by-side comparisons and trend analysis.
-
-### 3. 💊 Treatment Guidance
-AI-suggested treatment plans tailored to each patient's condition, history, and severity.
-
-### 4. 📋 Patient Reports
-Auto-generated clinical summaries and structured reports ready for documentation or referral.
-
-### 5. 🔔 Smart Alerts
-Automatically notify the doctor if a patient's condition shows signs of worsening between visits.
-
-### 6. 📚 Medical Knowledge Base
-Built-in dermatology reference library covering hundreds of skin diseases, symptoms, and treatments.
-
-### 7. 💬 Patient Chat Support
-An AI companion that answers patient questions and provides guidance between doctor visits.
-
-### 8. 🛡️ Doctor Decision Support
-AI assists, doctor decides — always human-in-the-loop to ensure safe and accurate clinical outcomes.
+- 🔐 **Authentication** — Email/password sign up & login via Supabase Auth
+- 📤 **AI Skin Diagnosis** — Upload a photo and get disease prediction + confidence score
+- 💊 **Drug Interaction Checker** — Flags conflicts between suggested treatment and chronic medications
+- 📋 **Medical History** — Stores and displays past diagnoses
+- 🗺️ **Clinics & Pharmacies Map** — Find nearby dermatologists
+- 🎥 **Awareness Videos** — Curated YouTube content (English & Arabic) for 35+ skin conditions
+- 👥 **Community** — Patient discussion space powered by Firebase Firestore
+- 🤖 **ChatBot** — In-app AI assistant
+- 🌗 **Dark Mode**, profile avatar upload, notifications, and a gamified progress tracker
+- 🔔 **Medication Reminders** — Background notifications via Service Worker (PWA-style)
 
 ---
 
-## 🎯 Who Is It For?
+## 🛠️ Tech Stack
 
-Skinova is built for **dermatologists and skin care clinics** looking to:
-- Speed up diagnosis with AI-assisted image analysis
-- Improve patient follow-up and recovery monitoring
-- Reduce administrative burden with auto-generated reports
-- Keep patients engaged and informed throughout their treatment
+| Layer | Technology |
+|---|---|
+| Frontend | React 18 + TypeScript, Vite, Tailwind CSS, shadcn/ui |
+| Auth & DB | Supabase (Postgres + Realtime) |
+| Community Chat | Firebase Firestore |
+| AI Backend | Python + FastAPI + PyTorch |
+| Background Notifications | Service Worker |
+
+---
+
+## 📦 Prerequisites
+
+- **Node.js** v18+ and npm
+- **Python** 3.10+
+- A [Supabase](https://supabase.com/) account and project
+- A [Firebase](https://firebase.google.com/) project (for community chat)
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/<your-username>/skinova.git
+cd skinova
+```
+
+---
+
+### 2. Frontend Setup
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create a `.env` file in the project root:
+
+```env
+VITE_SUPABASE_URL=https://your-project-ref.supabase.co
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
+
+> ⚠️ Never commit your `.env` file. Make sure it's listed in `.gitignore`.
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:5173`
+
+Build for production:
+
+```bash
+npm run build
+npm run preview
+```
+
+---
+
+### 3. AI Backend Setup (Python)
+
+Create and activate a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+```bash
+# Windows
+venv\Scripts\activate
+
+# macOS / Linux
+source venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
+pip install fastapi uvicorn torch torchvision pillow numpy python-multipart
+```
+
+> After installing, generate a requirements file for others:
+> ```bash
+> pip freeze > requirements.txt
+> ```
+
+Start the AI diagnosis server:
+
+```bash
+python -m uvicorn api_server:app --host 0.0.0.0 --port 8000 --reload
+```
+
+The server will be available at `http://localhost:8000`
+
+> The frontend will show **"⚠️ Cannot connect to AI server"** on the Upload & Diagnose page if this server isn't running.
+
+---
+
+## 🗄️ Supabase Setup
+
+Make sure your Supabase project has:
+
+- **Auth:** Email/password sign-up enabled
+- **Table:** `profiles` — stores `full_name`, `gender`, `birth_date`, `avatar_url`, linked to `auth.users` by `id`
+- **Table:** `diagnosis_history` — stores diagnosis records per user
+- **Storage bucket:** `avatars` — public bucket for profile picture uploads
+- **RLS policies** configured so users can only read/write their own data
+
+---
+
+## 📁 Project Structure
+
+```
+myAPP/
+├── public/
+│   ├── sw.js                  # Medication reminder service worker (interval-based)
+│   └── reminder-sw.js         # Medication reminder service worker (message-based)
+├── src/
+│   ├── components/
+│   │   ├── ui/                # shadcn/ui components
+│   │   ├── figma/             # Logo / image components
+│   │   ├── Awareness.tsx
+│   │   ├── ChatBot.tsx
+│   │   ├── ClinicsMap.tsx
+│   │   ├── Community.tsx
+│   │   ├── Dashboard.tsx
+│   │   ├── diseaseData.ts
+│   │   ├── diseaseVideos.ts
+│   │   ├── DrugInteraction.tsx
+│   │   ├── LoginPage.tsx
+│   │   ├── MedicalHistory.tsx
+│   │   ├── Navbar.tsx
+│   │   ├── Sidebar.tsx
+│   │   └── UploadDiagnosis.tsx
+│   ├── App.tsx
+│   ├── main.tsx
+│   ├── index.css
+│   ├── firebase.ts
+│   ├── supabaseClient.ts
+│   ├── diagnosisHistory.ts
+│   └── useNotifications.ts
+├── api_server.py              # Python AI backend
+├── best_model2.pth            # Trained PyTorch model weights (~337 MB)
+├── package.json
+├── vite.config.ts
+├── tailwind.config.js
+└── .gitignore
+```
+
+---
+
+## 🔑 Environment Variables
+
+| Variable | Description |
+|---|---|
+| `VITE_SUPABASE_URL` | Your Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | Your Supabase public/anon key |
+| `VITE_FIREBASE_API_KEY` | Firebase API key |
+| `VITE_FIREBASE_AUTH_DOMAIN` | Firebase auth domain |
+| `VITE_FIREBASE_PROJECT_ID` | Firebase project ID |
+| `VITE_FIREBASE_STORAGE_BUCKET` | Firebase storage bucket |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging sender ID |
+| `VITE_FIREBASE_APP_ID` | Firebase app ID |
+
+---
+
+## 🧪 Commands Reference
+
+| Command | Description |
+|---|---|
+| `git clone <url>` | Clone the repository |
+| `npm install` | Install frontend dependencies |
+| `npm run dev` | Start frontend dev server (port 5173) |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build |
+| `python -m venv venv` | Create Python virtual environment |
+| `pip install fastapi uvicorn torch torchvision pillow numpy python-multipart` | Install backend dependencies |
+| `python -m uvicorn api_server:app --host 0.0.0.0 --port 8000 --reload` | Start AI diagnosis server (port 8000) |
+
+---
+
+## ▶️ Full Run Guide (Step by Step)
+
+### Terminal 1 — Frontend
+
+```bash
+# 1. Clone the project
+git clone https://github.com/<your-username>/skinova.git
+cd skinova
+
+# 2. Install dependencies
+npm install
+
+# 3. Create your .env file and fill in the values
+cp .env.example .env
+
+# 4. Start the frontend dev server
+npm run dev
+```
+
+---
+
+### Terminal 2 — AI Backend
+
+```bash
+# 1. Go to the project folder (if not already there)
+cd skinova
+
+# 2. Create a virtual environment
+python -m venv venv
+
+# 3. Activate it
+# Windows:
+venv\Scripts\activate
+# macOS / Linux:
+source venv/bin/activate
+
+# 4. Install backend dependencies
+pip install fastapi uvicorn torch torchvision pillow numpy python-multipart
+
+# 5. Start the AI server
+python -m uvicorn api_server:app --host 0.0.0.0 --port 8000 --reload
+```
+
+> ✅ Both servers must be running at the same time for the app to work fully.
+>
+> - Frontend → `http://localhost:5173`
+> - AI Backend → `http://localhost:8000`
+
+---
+
+## ⚠️ Before Pushing to GitHub
+
+- **Model file size:** `best_model2.pth` is ~337 MB — GitHub blocks files over 100 MB. Use [Git LFS](https://git-lfs.com/) or host the model externally (Hugging Face Hub, Google Drive, S3).
+- Make sure `.env` is in `.gitignore` and not tracked.
+- Move any hardcoded Supabase credentials in `supabaseClient.ts` to `.env`.
 
 ---
 
 ## ⚠️ Disclaimer
 
-Skinova is a **clinical decision support tool** and is not intended to replace professional medical judgment. All diagnoses and treatment decisions must be reviewed and approved by a licensed dermatologist.
+Skinova is built for educational/informational purposes. AI-generated diagnoses are **not** a substitute for professional medical advice. Always consult a licensed dermatologist for actual diagnosis and treatment.
+
+---
+
+## 📄 License
+
+MIT License — free to use, modify, and distribute with attribution.
+
+---
+
+## 🙏 Credits
+
+Built with [shadcn/ui](https://ui.shadcn.com), [Radix UI](https://radix-ui.com), [Tailwind CSS](https://tailwindcss.com), [Supabase](https://supabase.com), and [Firebase](https://firebase.google.com).
